@@ -1,6 +1,11 @@
 import os
 from typing import Any, Dict, List
 
+from openai import OpenAI
+from sentence_transformers import SentenceTransformer
+import torch
+import vllm
+
 from models.utils import trim_predictions_to_max_token_length
 
 # Load the environment variable that specifies the URL of the MockAPI. This URL is essential
@@ -14,15 +19,55 @@ from models.utils import trim_predictions_to_max_token_length
 # **Note**: This environment variable will not be available for Task 1 evaluations.
 CRAG_MOCK_API_URL = os.getenv("CRAG_MOCK_API_URL", "http://localhost:8000")
 
+# VLLM Parameters 
+VLLM_TENSOR_PARALLEL_SIZE = 1 # TUNE THIS VARIABLE depending on the number of GPUs you are requesting and the size of your model.
+VLLM_GPU_MEMORY_UTILIZATION = 0.85 # TUNE THIS VARIABLE depending on the number of GPUs you are requesting and the size of your model.
+
+# Sentence Transformer Parameters
+SENTENTENCE_TRANSFORMER_BATCH_SIZE = 32 # TUNE THIS VARIABLE depending on the size of your embedding model and GPU mem available
 
 class DummyModel:
-    def __init__(self):
+    def __init__(self, llm_name="meta-llama/Llama-3.2-3B-Instruct", is_server=False, vllm_server=None):
         """
         Initialize your model(s) here if necessary.
         This is the constructor for your DummyModel class, where you can set up any
         required initialization steps for your model(s) to function correctly.
         """
-        pass
+        self.initialize_models(llm_name, is_server, vllm_server)
+
+    def initialize_models(self, llm_name, is_server, vllm_server):
+        self.llm_name = llm_name
+        self.is_server = is_server
+        self.vllm_server = vllm_server
+
+        if self.is_server:
+            # initialize the model with vllm server
+            openai_api_key = "EMPTY"
+            openai_api_base = self.vllm_server
+            self.llm_client = OpenAI(
+                api_key=openai_api_key,
+                base_url=openai_api_base,
+            )
+        else:
+            # initialize the model with vllm offline inference
+            self.llm = vllm.LLM(
+                model=self.llm_name,
+                worker_use_ray=True,
+                tensor_parallel_size=VLLM_TENSOR_PARALLEL_SIZE,
+                gpu_memory_utilization=VLLM_GPU_MEMORY_UTILIZATION,
+                trust_remote_code=True,
+                dtype="half",  # note: bfloat16 is not supported on nvidia-T4 GPUs
+                enforce_eager=True
+            )
+            self.tokenizer = self.llm.get_tokenizer()
+
+        # Load a sentence transformer model optimized for sentence embeddings, using CUDA if available.
+        self.sentence_model = SentenceTransformer(
+            "all-MiniLM-L6-v2",
+            device=torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu"
+            ),
+        )
 
     def get_batch_size(self) -> int:
         """
