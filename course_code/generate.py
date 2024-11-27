@@ -85,6 +85,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset_path", type=str, default="example_data/dev_data.jsonl.bz2",
                         choices=["example_data/dev_data.jsonl.bz2", # example data
                                  "data/crag_task_1_dev_v4_release.jsonl.bz2", # full data
+                                 "cs245-project-group-p3/example_data/dev_data.jsonl.bz2",
                                  ])
     parser.add_argument("--split", type=int, default=-1,
                         help="The split of the dataset to use. This is only relevant for the full data: "
