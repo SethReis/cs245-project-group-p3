@@ -1,0 +1,20 @@
+[
+    {
+        "query": "is microsoft office 2019 available in a greater number of languages than microsoft office 2013?",
+        "ground_truth": "yes",
+        "prediction": "Yes, Microsoft Office 2019 is available in more languages than Microsoft Office 2013.",
+        "response": "Accuracy: False"
+    },
+    {
+        "query": "name three celebrities who have been involved in successful collaborations with beauty brands.",
+        "ground_truth": "three celebrities who have been involved in successful collaborations with beauty brands are jennifer aniston (lolavie), kim kardashian (skkn), and selena gomez (rare).",
+        "prediction": "Based on available information, here are three celebrities who have been involved in successful collaborations with beauty brands:\n\n1. Kylie Jenner - collaborated with Sephora on a makeup line.\n2. Chrissy Teigen - partnered with MAC Cosmetics for a makeup line",
+        "response": "Accuracy: True"
+    },
+    {
+        "query": "which companies have the highest level of dividend yield?",
+        "ground_truth": "some companies with a high level of dividend yield are hess midstream lp, xerox, and at&t with dividend yields of over 5% each.",
+        "prediction": "As of my cut-off knowledge date (01 March 2023), I don't have real-time data. However, I can provide you with some information on companies with high dividend yields based on my training data.\n\nSome companies with high dividend yields (",
+        "response": "Accuracy: True"
+    }
+]

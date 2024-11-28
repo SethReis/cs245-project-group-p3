@@ -1,0 +1,26 @@
+[
+    {
+        "query": "name three celebrities who have been involved in successful collaborations with beauty brands.",
+        "ground_truth": "three celebrities who have been involved in successful collaborations with beauty brands are jennifer aniston (lolavie), kim kardashian (skkn), and selena gomez (rare).",
+        "prediction": "None",
+        "response": "Accuracy: False"
+    },
+    {
+        "query": "how many times has rory mcilroy won the masters tournament?",
+        "ground_truth": "rory mcilroy has never won the masters tournament, despite being one of the most successful golfers on the pga tour.",
+        "prediction": "Rory McIlroy has won the Masters tournament 3 times.",
+        "response": "Accuracy: True"
+    },
+    {
+        "query": "which companies have the highest level of dividend yield?",
+        "ground_truth": "some companies with a high level of dividend yield are hess midstream lp, xerox, and at&t with dividend yields of over 5% each.",
+        "prediction": "The companies with the highest level of dividend yield, according to the references, are:\n\n1. Pfizer Inc. (PFE) - 6.3%\n2. Devon Energy Corp. (DVN) - 6.5%\n3.",
+        "response": "Accuracy: True"
+    },
+    {
+        "query": "who was the first actor to play the role of a comic book villain in a live-action movie?",
+        "ground_truth": "carol forman was the first actor to play the role of a comic book villain in a live-action movie, in his iconic portrayal of the spider lady in superman, directed by spencer gordon bennet and thomas carr.",
+        "prediction": "He played J. Jonah Jameson in Sam Raimi's trilogy of Spider-Man movies.",
+        "response": "Accuracy: True"
+    }
+]
