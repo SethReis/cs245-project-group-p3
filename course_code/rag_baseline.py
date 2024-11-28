@@ -26,7 +26,7 @@ MAX_CONTEXT_REFERENCES_LENGTH = 4000
 # Batch size you wish the evaluators will use to call the `batch_generate_answer` function
 AICROWD_SUBMISSION_BATCH_SIZE = 1 # TUNE THIS VARIABLE depending on the number of GPUs you are requesting and the size of your model.
 
-# VLLM Parameters 
+# VLLM Parameters
 VLLM_TENSOR_PARALLEL_SIZE = 1 # TUNE THIS VARIABLE depending on the number of GPUs you are requesting and the size of your model.
 VLLM_GPU_MEMORY_UTILIZATION = 0.85 # TUNE THIS VARIABLE depending on the number of GPUs you are requesting and the size of your model.
 
@@ -166,7 +166,7 @@ class RAGModel:
                 gpu_memory_utilization=VLLM_GPU_MEMORY_UTILIZATION,
                 trust_remote_code=True,
                 dtype="half",  # note: bfloat16 is not supported on nvidia-T4 GPUs
-                enforce_eager=True
+                enforce_eager=True,
             )
             self.tokenizer = self.llm.get_tokenizer()
 
@@ -199,24 +199,24 @@ class RAGModel:
         )
         # Note: There is an opportunity to parallelize the embedding generation across 4 GPUs
         #       but sentence_model.encode_multi_process seems to interefere with Ray
-        #       on the evaluation servers. 
+        #       on the evaluation servers.
         #       todo: this can also be done in a Ray native approach.
-        #       
+        #
         return embeddings
 
     def get_batch_size(self) -> int:
         """
         Determines the batch size that is used by the evaluator when calling the `batch_generate_answer` function.
-        
-        The evaluation timeouts linearly scale with the batch size. 
-            i.e.: time out for the `batch_generate_answer` call = batch_size * per_sample_timeout 
-        
+
+        The evaluation timeouts linearly scale with the batch size.
+            i.e.: time out for the `batch_generate_answer` call = batch_size * per_sample_timeout
+
 
         Returns:
             int: The batch size, an integer between 1 and 16. It can be dynamic
                  across different batch_generate_answer calls, or stay a static value.
         """
-        self.batch_size = AICROWD_SUBMISSION_BATCH_SIZE  
+        self.batch_size = AICROWD_SUBMISSION_BATCH_SIZE
         return self.batch_size
 
     def batch_generate_answer(self, batch: Dict[str, Any]) -> List[str]:
@@ -280,12 +280,12 @@ class RAGModel:
             retrieval_results = relevant_chunks[
                 (-cosine_scores).argsort()[:NUM_CONTEXT_SENTENCES]
             ]
-            
-            # You might also choose to skip the steps above and 
+
+            # You might also choose to skip the steps above and
             # use a vectorDB directly.
             batch_retrieval_results.append(retrieval_results)
-            
-        # Prepare formatted prompts from the LLM        
+
+        # Prepare formatted prompts from the LLM
         formatted_prompts = self.format_prompts(queries, query_times, batch_retrieval_results)
 
         # Generate responses via vllm
@@ -322,12 +322,12 @@ class RAGModel:
     def format_prompts(self, queries, query_times, batch_retrieval_results=[]):
         """
         Formats queries, corresponding query_times and retrieval results using the chat_template of the model.
-            
+
         Parameters:
         - queries (List[str]): A list of queries to be formatted into prompts.
         - query_times (List[str]): A list of query_time strings corresponding to each query.
         - batch_retrieval_results (List[str])
-        """        
+        """
         system_prompt = "You are provided with a question and various references. Your task is to answer the question succinctly, using the fewest words possible. If the references do not contain the necessary information to answer the question, respond with 'I don't know'. There is no need to explain the reasoning behind your answers."
         formatted_prompts = []
 
@@ -337,18 +337,18 @@ class RAGModel:
 
             user_message = ""
             references = ""
-            
+
             if len(retrieval_results) > 0:
                 references += "# References \n"
                 # Format the top sentences as references in the model's prompt template.
                 for _snippet_idx, snippet in enumerate(retrieval_results):
                     references += f"- {snippet.strip()}\n"
-            
+
             references = references[:MAX_CONTEXT_REFERENCES_LENGTH]
             # Limit the length of references to fit the model's input size.
 
             user_message += f"{references}\n------\n\n"
-            user_message 
+            user_message
             user_message += f"Using only the references listed above, answer the following question: \n"
             user_message += f"Current Time: {query_time}\n"
             user_message += f"Question: {query}\n"
