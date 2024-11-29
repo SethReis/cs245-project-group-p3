@@ -11,7 +11,6 @@ import vllm
 from openai import OpenAI
 
 
-
 def parse_response(resp: str):
     """Pass auto-eval output from the evaluator."""
     try:
@@ -81,7 +80,8 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="vanilla_baseline",
                         choices=["vanilla_baseline",
                                  "rag_baseline",
-                                 "dummy_model"
+                                 "dummy_model",
+                                 "betterrag"
                                  ],
                         )
 

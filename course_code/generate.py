@@ -95,7 +95,8 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="vanilla_baseline",
                         choices=["vanilla_baseline",
                                  "rag_baseline",
-                                 "dummy_model"
+                                 "dummy_model",
+                                 "betterrag"
                                  ],
                         )
 
@@ -125,7 +126,7 @@ if __name__ == "__main__":
 
     llm_name = args.llm_name
     _llm_name = llm_name.split("/")[-1]
-    
+
     model_name = args.model_name
     if model_name == "vanilla_baseline":
         from vanilla_baseline import InstructModel
@@ -134,8 +135,11 @@ if __name__ == "__main__":
         from rag_baseline import RAGModel
         model = RAGModel(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
     elif model_name == "dummy_model":
-        from models.dummy_model import DummyModel
+        from dummy_model import DummyModel
         model = DummyModel(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
+    elif model_name == "betterrag":
+        from betterrag import BetterRag
+        model = BetterRag(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
     else:
         raise ValueError("Model name not recognized.")
 
