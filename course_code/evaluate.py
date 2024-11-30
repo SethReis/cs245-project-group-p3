@@ -80,8 +80,10 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="vanilla_baseline",
                         choices=["vanilla_baseline",
                                  "rag_baseline",
-                                 "dummy_model",
-                                 "betterrag"
+                                 "betterrag",
+                                 "betterrag_no_keyword_prompt",
+                                 "betterrag_no_vector_search",
+                                 "betterrag_no_reranker",
                                  ],
                         )
 

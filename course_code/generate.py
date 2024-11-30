@@ -95,8 +95,10 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="vanilla_baseline",
                         choices=["vanilla_baseline",
                                  "rag_baseline",
-                                 "dummy_model",
-                                 "betterrag"
+                                 "betterrag",
+                                 "betterrag_no_keyword_prompt",
+                                 "betterrag_no_vector_search",
+                                 "betterrag_no_reranker",
                                  ],
                         )
 
@@ -134,12 +136,18 @@ if __name__ == "__main__":
     elif model_name == "rag_baseline":
         from rag_baseline import RAGModel
         model = RAGModel(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
-    elif model_name == "dummy_model":
-        from dummy_model import DummyModel
-        model = DummyModel(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
     elif model_name == "betterrag":
         from betterrag import BetterRag
         model = BetterRag(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
+    elif model_name == "betterrag_no_keyword_prompt":
+        from betterrag_no_keyword_prompt import BetterRagNoKeywordPrompt
+        model = BetterRagNoKeywordPrompt(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
+    elif model_name == "betterrag_no_vector_search":
+        from betterrag_no_vector_search import BetterRagNoVectorSearch
+        model = BetterRagNoVectorSearch(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
+    elif model_name == "betterrag_no_reranker":
+        from betterrag_no_reranker import BetterRagNoReranker
+        model = BetterRagNoReranker(llm_name=llm_name, is_server=args.is_server, vllm_server=args.vllm_server)
     else:
         raise ValueError("Model name not recognized.")
 
