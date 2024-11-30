@@ -35,6 +35,7 @@ BetterRag is an advanced Retrieval-Augmented Generation (RAG) pipeline designed 
 
 ### 2. **Batch Query Execution**
 The core execution flow involves:
+
 **Step 1: Keyword and Vector-Based Search**
 - Keyword Extraction:
     - Keywords are extracted from the query using the LLM.
