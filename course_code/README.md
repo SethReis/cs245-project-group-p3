@@ -2,7 +2,7 @@
 
 ## Overview
 
-BetterRag is an advanced Retrieval-Augmented Generation (RAG) pipeline designed to retrieve relevant information and generate high-quality responses to user queries. The model leverages multiple tools and methodologies to ensure effective data retrieval, reranking, and answer generation. This README explains the components, pipelines, and execution flow of the `BetterRag` model.
+BetterRag is an advanced Retrieval-Augmented Generation (RAG) pipeline designed to retrieve relevant information and generate high-quality responses to user queries. The model leverages multiple methodologies to ensure effective data retrieval, reranking, and answer generation. This README explains the components, pipelines, and execution flow of the `BetterRag` model.
 
 ---
 
@@ -31,18 +31,24 @@ BetterRag is an advanced Retrieval-Augmented Generation (RAG) pipeline designed 
 
 ### 1. **Initialization**
 - Configure model and device settings.
-- Load required components such as ChunkExtractor, Sentence Transformer, TF-IDF, and Cross-Encoder.
+- Load required components such as Chunk Extractor, Sentence Transformer, TF-IDF, and Cross-Encoder.
 
 ### 2. **Batch Query Execution**
 The core execution flow involves:
 
-**Step 1: Keyword and Vector-Based Search**
+**Step 0: Chunk Retrieval**
+- The Chunk Extractor parses the document, breaking it up into chunks (document snippets).
+
+**Step 1a: Keyword Search**
 - Keyword Extraction:
     - Keywords are extracted from the query using the LLM.
-    - The extraction process prioritizes the most important terms for searching relevant information.
 - Search Execution:
-    - A TF-IDF Vectorizer performs keyword-based searches against preprocessed text chunks, prioritizing n-gram matches.
-    - Simultaneously, a SentenceTransformer model encodes the query and text chunks into dense vectors for vector-based semantic search.
+    - A TF-IDF Vectorizer performs keyword-based searches against preprocessed text chunks.
+    - Chunks containing the keywords are obtained from this step.
+
+**Step 1b: Vector Search**
+- A SentenceTransformer model encodes the query and text chunks into dense vectors for vector-based semantic search.
+- Chunks with semantically similar meanings (based on sentence-embeddings) are obtained from this step.
 
 **Step 2: Merging and Deduplication**
 - Results from both keyword-based and vector-based searches are combined into a single list.
